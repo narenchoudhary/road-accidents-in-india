@@ -9,3 +9,5 @@ Visualizations of road accidents in India from 2003 to 2011
 >
 > 
 >  --- <cite>[National statistics of road traffic accidents in India](http://www.jotr.in/article.asp?issn=0975-7341;year=2013;volume=6;issue=1;spage=1;epage=6;aulast=Ruikar)</cite>
+
+![causes-plot](Rplot.png)

@@ -4,15 +4,15 @@ library(tidyr)
 library(ggplot2)
 library(reshape2)
 
+# Prepare Data -------------------------------------------------------
 # read csv
 # read as tbl_df instead of data.frame
-table1 <- read.csv(
-  file = "Data/Years_individual/Details_of_road_accident_deaths_by_situation_state.csv",
-  stringsAsFactors = FALSE
-) %>% tbl_df()
+csv_f <- "Data/Years_individual/Details_of_road_accident_deaths_by_situation_state.csv"
+table1 <- tbl_df(read.csv( file = csv_f, stringsAsFactors = FALSE))
+names(table1) <- tolower(names(table1))
 
-names(table1) <- names(table1) %>% tolower()
 
+# Explore Data -------------------------------------------------------
 
 table2 <- table1 %>% 
   group_by(year) %>%
@@ -50,3 +50,30 @@ table3 %>% ggplot(aes(x = state.ut, y = total)) +
   labs(title = 'Deaths in road accidents from 2001-2012',
        y = 'Casualties (in thousands)',
        x = 'States/UTs')
+
+
+table4 <- table1 %>% 
+  filter(!grepl('Total', cause)) %>% 
+  group_by(cause) %>% 
+  summarize(male = sum(male, na.rm = T)/1000, female = sum(female, na.rm = T)/1000) %>% 
+  arrange(male) %>% 
+  melt(id.vars = 'cause')
+
+table4$cause <- factor(table4$cause, levels = table4$cause)
+
+ggplot(table4, aes(x = cause, y = value, fill = variable)) + 
+  geom_bar(stat = 'identity', position = 'dodge') +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(title = 'Deaths in road accidents from 2001-2012',
+       y = 'Casualties (in thousands)',
+       x = 'Vehicle involved')
+
+table5 <- table1 %>% 
+  filter(!grepl('TOTAL', state.ut)) %>% 
+  group_by(year) %>% 
+  summarise(male = sum(male)/1000, female = sum(female)/1000) %>% 
+  melt(id.vars = 'year')
+
+ggplot(table5, aes(x = year, y = value, color = variable)) + 
+  geom_line()
