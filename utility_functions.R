@@ -11,6 +11,7 @@ GetPlot <- function(x){
   subset.plot <- table1.causes.subset %>%
     ggplot(aes(year, value, color = variable)) +
     geom_line() +
+    geom_point() +
     theme_bw() +
     theme(legend.position = 'none',
           plot.title = element_text(hjust = 0)) +

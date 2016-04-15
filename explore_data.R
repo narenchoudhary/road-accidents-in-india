@@ -6,7 +6,7 @@ library(reshape2)
 
 # Prepare Data -------------------------------------------------------
 # read csv
-# read as tbl_df instead of data.frame
+# Important: read as tbl_df instead of data.frame
 csv_f <- "Data/Years_individual/Details_of_road_accident_deaths_by_situation_state.csv"
 table1 <- tbl_df(read.csv( file = csv_f, stringsAsFactors = FALSE))
 names(table1) <- tolower(names(table1))
@@ -35,9 +35,8 @@ table2_gg1 <- table2 %>% ggplot(aes(x = year, y = value, fill = variable)) +
 table3 <- table1 %>% 
   filter(!grepl('TOTAL', state.ut)) %>% 
   group_by(state.ut) %>% 
-  summarise(male = sum(male)/1000, female = sum(female)/1000, total = sum(total)/1000) %>% 
-  filter(total > 5) %>%
-  arrange(total)
+  summarise(male = sum(male)/1000, female = sum(female)/1000, total = sum(total)/1000)
+
 
 # explicitly mention order of x axis ticks to stop ggplot from
 # reordering them
@@ -69,7 +68,7 @@ ggplot(table4, aes(x = cause, y = value, fill = variable)) +
        y = 'Casualties (in thousands)',
        x = 'Vehicle involved')
 
-table5 <- table1 %>% 
+table5 <- table1 %>%
   filter(!grepl('TOTAL', state.ut)) %>% 
   group_by(year) %>% 
   summarise(male = sum(male)/1000, female = sum(female)/1000) %>% 
